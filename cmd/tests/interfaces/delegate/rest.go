@@ -8,7 +8,7 @@ type restAPIHandler struct {
 }
 
 func New() broker.Handler {
-	rapi := restAPIHandler{}
+	return nil
 }
 
 type RestPostHandler interface {

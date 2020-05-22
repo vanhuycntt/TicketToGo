@@ -22,4 +22,5 @@ func main() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatalf("Failed to run the service: %v", err)
 	}
+
 }

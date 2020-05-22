@@ -83,3 +83,20 @@ func TestClosedChannel(b *testing.T) {
 	syncWait.Wait()
 
 }
+
+func TestCloseDualChannel(t *testing.T) {
+	ch01 := make(chan int)
+	ch02 := make(chan int)
+	go func() {
+		ch01 <- 0
+	}()
+
+	select {
+	case <-ch01:
+		fmt.Println("ch01")
+	case <-ch02:
+		fmt.Println("ch02")
+
+	}
+
+}

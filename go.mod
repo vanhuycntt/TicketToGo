@@ -14,11 +14,12 @@ require (
 	github.com/jinzhu/gorm v1.9.11 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/looplab/fsm v0.1.0
+	github.com/mailgun/holster/v3 v3.11.1 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
-	github.com/pkg/errors v0.8.0
+	github.com/pkg/errors v0.8.1
 	github.com/ryanfaerman/fsm v0.0.0-20160110232151-3dc1bc098027
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
