@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/net"
 	"log"
 	"net/http"
 	"net/http/httputil"
-	"reflect"
+	"sync"
 	"time"
 )
 
@@ -30,7 +31,7 @@ var (
 
 func main() {
 	http.HandleFunc("/getChunked", func(rw http.ResponseWriter, req *http.Request) {
-		reqDumper, _ := httputil.DumpRequest(req, true)
+		reqDumper, _ := httputil.DumpRequest(req, false)
 
 		fmt.Println(string(reqDumper))
 		if req.Method != http.MethodGet {
@@ -45,17 +46,43 @@ func main() {
 		}
 
 		rw.WriteHeader(http.StatusOK)
-		rw.Header().Set("Content-Type", "application/json")
-
+		locs := make(chan Geolocation)
 		enc := json.NewEncoder(rw)
-		for _, l := range locations {
-			if err := enc.Encode(l); err != nil {
-				rw.WriteHeader(http.StatusOK)
-				return
+		syncWait := sync.WaitGroup{}
+		syncWait.Add(1)
+
+		go func() {
+			defer syncWait.Done()
+			for {
+				select {
+				case l, ok := <-locs:
+					if !ok {
+						return
+					}
+					if err := enc.Encode(l); err != nil {
+						fmt.Println("error to encode ", err)
+						if net.IsProbableEOF(err) {
+							return
+						}
+						continue
+					}
+					rw.(http.Flusher).Flush()
+				case <-req.Context().Done():
+					fmt.Println("client closed")
+					return
+				}
 			}
-			rw.(http.Flusher).Flush()
-			time.Sleep(1 * time.Second)
-		}
+
+		}()
+
+		go func() {
+			for _, l := range locations {
+				locs <- l
+			}
+			close(locs)
+		}()
+
+		syncWait.Wait()
 
 	})
 	http.HandleFunc("/getInfo", func(rw http.ResponseWriter, req *http.Request) {
@@ -73,34 +100,41 @@ func main() {
 
 		fmt.Println(string(reqDumper))
 		decoder := json.NewDecoder(req.Body)
-		for {
-			var geo Geolocation
-			err := decoder.Decode(&geo)
-			if err != nil {
-				errVal := reflect.ValueOf(err)
-				fmt.Println(errVal.Type().String())
 
-				fmt.Println(err)
-				break
+		for {
+			select {
+			case <-req.Context().Done():
+				fmt.Println("connection closed")
+				return
+			default:
+				var geo Geolocation
+				err := decoder.Decode(&geo)
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+				fmt.Println(geo)
 			}
-			fmt.Println(geo)
+
 		}
 		fmt.Println("TRANSMISSION COMPLETE")
 	})
 	authMiddleware := func(reqHandler http.HandlerFunc) http.HandlerFunc {
 		return func(rw http.ResponseWriter, req *http.Request) {
+
 			reqHandler(rw, req)
 		}
 	}
 	reqHandler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 
 	})
-	http.Handle("", authMiddleware(reqHandler))
+
+	http.Handle("/", authMiddleware(reqHandler))
 
 	server := http.Server{
 		Addr:           "127.0.0.1:8080",
 		ReadTimeout:    20 * time.Second,
-		WriteTimeout:   20 * time.Second,
+		WriteTimeout:   2 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 	err := server.ListenAndServe()
