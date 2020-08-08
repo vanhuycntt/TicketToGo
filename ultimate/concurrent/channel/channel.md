@@ -1,4 +1,4 @@
-#Channel
+# Channel
 
 ## Overview
 - Channels are for orchestration between goroutines, it allows us to have 2 goroutines participate in some sort of workflow and give us the ability to orchestrate in a predictable way.
