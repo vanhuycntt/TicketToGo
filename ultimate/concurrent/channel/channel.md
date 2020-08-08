@@ -1,4 +1,5 @@
 #Channel
+
 ## Overview
 - Channels are for orchestration between goroutines, it allows us to have 2 goroutines participate in some sort of workflow and give us the ability to orchestrate in a predictable way.
 - Channel is a way of signaling event to another goroutine rather than a queue implementation.
@@ -269,12 +270,13 @@ each of them will be received an arbitrary data until the channel is closed.
     
     go Play("A", ballCh)
     Play("B", ballCh)
-```
+    ```
 
  
 
  
 #### Stop gracefully
+
 ## References
 - https://github.com/hoanhan101/ultimate-go/blob/master/go/concurrency/channel_1.go
 - https://go101.org/article/channel.html
