@@ -30,6 +30,7 @@ var (
 )
 
 func main() {
+
 	http.HandleFunc("/getChunked", func(rw http.ResponseWriter, req *http.Request) {
 		reqDumper, _ := httputil.DumpRequest(req, false)
 

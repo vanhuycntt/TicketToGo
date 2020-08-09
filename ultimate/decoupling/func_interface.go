@@ -1,37 +1,24 @@
 package main
 
-import "fmt"
+import "net/http"
 
-type (
-	Printer interface {
-		Print()
-	}
-	Notifier interface {
-		Notify()
-	}
-)
-type (
-	Duration int
+type Handler func(rs http.ResponseWriter, rq *http.Request) error
 
-	OutToConsole struct{}
-)
+type Middleware func(handler Handler) Handler
 
-func (o OutToConsole) Print() {
-	fmt.Println(fmt.Sprintf("console output %p", &o))
+type User struct {
 }
 
-func (d *Duration) Print() {
-	fmt.Println(fmt.Sprintf("console output %d", *d))
-}
+func Authenticate(user User) Middleware {
+	md := func(after Handler) Handler {
 
+		return func(rs http.ResponseWriter, rq *http.Request) error {
+
+			return after(rs, rq)
+		}
+	}
+	return md
+}
 func main() {
-	o := OutToConsole{}
 
-	outs := []Printer{o, &o}
-
-	fmt.Println(fmt.Sprintf(" origin pointer %p", &o))
-	fmt.Println(fmt.Sprintf(" 1st pointer %p", &outs[0]))
-	fmt.Println(fmt.Sprintf(" 2st pointer %p", outs[1]))
-	d := Duration(10)
-	d.Print()
 }
