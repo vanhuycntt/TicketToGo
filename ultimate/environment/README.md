@@ -12,6 +12,10 @@
     - GOBIN:
     The command `go install` build the binary executable file and put it to install directory
     . Tne install directory is controlled by **GOPATH** and **GOBIN** environment variables. 
-    The rule of this reference as below:
-    >> If GOBIN is set, binaries are installed to that directory. If GOPATH is set, binaries are installed to the bin subdirectory of the first directory in the GOPATH list. Otherwise, binaries are installed to the bin subdirectory of the default GOPATH ($HOME/go or %USERPROFILE%\go).
-1. Advanced variable    
+    The rule that install directory belongs to as below:
+    > If **GOBIN** is set, binaries are installed to that directory. If **GOPATH** is set, binaries are installed to 
+    the bin subdirectory of the first directory in the **GOPATH** list. Otherwise, binaries are installed to the bin subdirectory of the default GOPATH ($HOME/go or %USERPROFILE%\go).
+
+1. Advanced variables
+
+    
