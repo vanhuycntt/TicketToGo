@@ -3,7 +3,9 @@
 ## Overview
 
 ## Usages
-
+   - Coming request
+   - Outgoing calls
+   - 
 ## Patterns
 
 1) Timeout, Cancel, Deadline

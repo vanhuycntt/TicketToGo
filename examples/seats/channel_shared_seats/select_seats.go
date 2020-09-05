@@ -1,7 +1,7 @@
 package channel_shared_seats
 
 import (
-	"TicketToGo"
+	"TicketToGo/examples/seats/array_shared_seats"
 	"context"
 	"errors"
 )
@@ -21,7 +21,7 @@ type (
 	}
 
 	SeatChartCoordinator struct {
-		seats  []*TicketsToGo.Seat
+		seats  []*array_shared_seats.Seat
 		length int
 
 		head int
@@ -33,7 +33,7 @@ type (
 
 func newSeatChartCoordinator(numSeats int) *SeatChartCoordinator {
 	seatChart := &SeatChartCoordinator{
-		seats:  make([]*TicketsToGo.Seat, numSeats),
+		seats:  make([]*array_shared_seats.Seat, numSeats),
 		length: numSeats,
 		head:   0,
 		tail:   numSeats - 1,
@@ -87,7 +87,7 @@ escapeLoop:
 
 func (sc *SeatChartCoordinator) hold(req *Request) {
 	if sc.head == sc.tail || (sc.head+req.seatNum) > sc.tail {
-		req.acceptChan <- errors.New("Not Enough Seats")
+		req.acceptChan <- errors.New("not enough seats")
 		return
 	}
 
@@ -97,15 +97,15 @@ func (sc *SeatChartCoordinator) hold(req *Request) {
 
 		if seatObj == nil {
 			pos := s % sc.length
-			sc.seats[s] = &TicketsToGo.Seat{
-				PlacedFlag: TicketsToGo.HOLD,
+			sc.seats[s] = &array_shared_seats.Seat{
+				PlacedFlag: array_shared_seats.HOLD,
 				Position:   pos,
 			}
 			continue
 		}
 
-		if seatObj.PlacedFlag == TicketsToGo.UNHOLD {
-			seatObj.PlacedFlag = TicketsToGo.HOLD
+		if seatObj.PlacedFlag == array_shared_seats.UNHOLD {
+			seatObj.PlacedFlag = array_shared_seats.HOLD
 		}
 	}
 	var posSeats []int
@@ -117,16 +117,16 @@ func (sc *SeatChartCoordinator) hold(req *Request) {
 }
 
 func (sc *SeatChartCoordinator) unhold(req *Request) {
-	var compensateSeats []*TicketsToGo.Seat
+	var compensateSeats []*array_shared_seats.Seat
 escapeLoop:
 	for {
 		select {
 		case seatsArr := <-req.acceptChan:
 			positions := seatsArr.([]int)
-			compensateSeats = make([]*TicketsToGo.Seat, len(positions))
+			compensateSeats = make([]*array_shared_seats.Seat, len(positions))
 			for idx, pos := range positions {
-				compensateSeats[idx] = &TicketsToGo.Seat{
-					PlacedFlag: TicketsToGo.UNHOLD,
+				compensateSeats[idx] = &array_shared_seats.Seat{
+					PlacedFlag: array_shared_seats.UNHOLD,
 					Position:   pos,
 				}
 			}
@@ -138,12 +138,12 @@ escapeLoop:
 
 	sc.tail += len(compensateSeats)
 }
-func (sc *SeatChartCoordinator) Collect() []*TicketsToGo.Seat {
-	rsSeats := make(map[int]*TicketsToGo.Seat)
+func (sc *SeatChartCoordinator) Collect() []*array_shared_seats.Seat {
+	rsSeats := make(map[int]*array_shared_seats.Seat)
 	for idx, s := range sc.seats {
 		if s == nil {
-			rsSeats[idx] = &TicketsToGo.Seat{
-				PlacedFlag: TicketsToGo.UNHOLD,
+			rsSeats[idx] = &array_shared_seats.Seat{
+				PlacedFlag: array_shared_seats.UNHOLD,
 				Position:   idx,
 			}
 			continue
@@ -154,7 +154,7 @@ func (sc *SeatChartCoordinator) Collect() []*TicketsToGo.Seat {
 		}
 		rsSeats[s.Position] = s
 	}
-	var seats []*TicketsToGo.Seat
+	var seats []*array_shared_seats.Seat
 	for _, val := range rsSeats {
 		seats = append(seats, val)
 	}
