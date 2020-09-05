@@ -4,8 +4,9 @@ go 1.13
 
 require (
 	github.com/RussellLuo/slidingwindow v0.0.0-20200202022810-2624ba7c6dea // indirect
-	github.com/bwmarrin/snowflake v0.3.0 // indirect
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/cenkalti/backoff/v4 v4.0.2 // indirect
+	github.com/emirpasic/gods v1.12.0
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.4.0 // indirect
 	github.com/google/wire v0.3.0 // indirect
@@ -20,7 +21,7 @@ require (
 	github.com/nbio/st v0.0.0-20140626010706-e9e8d9816f32 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pkg/errors v0.8.1
-	github.com/reactivex/rxgo/v2 v2.1.0 // indirect
+	github.com/reactivex/rxgo/v2 v2.1.0
 	github.com/ryanfaerman/fsm v0.0.0-20160110232151-3dc1bc098027
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect

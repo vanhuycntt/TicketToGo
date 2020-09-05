@@ -1,7 +1,6 @@
 package channel_shared_seats
 
 import (
-	"TicketToGo"
 	"fmt"
 	"k8s.io/apimachinery/pkg/util/rand"
 	"time"
@@ -11,7 +10,7 @@ import (
 )
 
 func RunMultiUserSelectSeatChartCoordinator(numUser int, numSeats int) {
-	seatsChart := TicketsToGo.newSeatChartCoordinator(numSeats)
+	seatsChart := newSeatChartCoordinator(numSeats)
 
 	var sWait sync.WaitGroup
 
