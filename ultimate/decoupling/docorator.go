@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
+	"sync"
 )
 
 type Handler func(ctx context.Context, rs http.ResponseWriter, rq *http.Request) error
@@ -20,7 +20,7 @@ type RestHandler struct {
 	pathsToHandler map[string]http.Handler
 }
 
-func (rh *RestHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+func (rh RestHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	pathHandler, ok := rh.pathsToHandler[req.URL.Path]
 	if !ok {
 		res.Write([]byte(`{msg: "not found", code :404}`))
@@ -57,9 +57,32 @@ func main() {
 
 	rh.Handle("/api/v1/about", RequestJWTToken, Auth(User{}))
 	rh.Handle("/api/v1/sign_in", SignIn)
+	rh.Handle("/api/v1/excel/invoices/{code}", DownloadExcel(func(id string) (bytes []byte, e error) {
+		return []byte(""), nil
+	}))
 
-	if err := http.ListenAndServe("0.0.0.0:8080", &rh); err != nil {
-		fmt.Println("server error")
-		os.Exit(2)
+	rh.Handle("/api/v1/excel/invoices/{code}", DownloadExcel(func(id string) (bytes []byte, e error) {
+		return []byte(""), nil
+	}))
+
+	server := http.Server{
+		Addr:    "0.0.0.0:8080",
+		Handler: rh,
 	}
+	server.RegisterOnShutdown(func() {
+
+	})
+
+	var syncWait sync.WaitGroup
+	syncWait.Add(1)
+	go func() {
+		defer syncWait.Done()
+		if err := server.ListenAndServe(); err != nil {
+			fmt.Println("server error", err)
+		}
+	}()
+	if err := server.Shutdown(context.Background()); err != nil {
+
+	}
+	syncWait.Wait()
 }

@@ -39,6 +39,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/ini.v1 v1.51.1 // indirect
+	gopkg.in/webhelp.v1 v1.0.0-20170530084242-3f30213e4c49 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	k8s.io/apimachinery v0.17.0
 	k8s.io/client-go v0.17.0 // indirect
