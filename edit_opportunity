@@ -49,8 +49,8 @@ opportunity
         + delete old items in which they don't have refrence from others(complex)
     - Case 2: Update to existed items to new values
         + reload existed item
-        + remap per item to update to new values
-    - Case 3: Update updated_opp_items on some informaton: quantity, price, payment_count
+        + update account + tax_classification, child account + tax classification
+        + update updated_opp_items on some informaton: quantity, price, payment_count
     #### Delete Opportunity Items
     - Verify deleted_opp_items existed
     - Delete deleted_opp_items
