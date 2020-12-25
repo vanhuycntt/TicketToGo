@@ -21,7 +21,7 @@ opportunity
 
 ## Logic Process
 ### Patron
-- Update patron
+- Update patron to new patron
     #### Update master patron id
     #### Update invoice address
     - Create new invoice address
@@ -35,6 +35,20 @@ opportunity
     - Create new client department
     - Update patron's client department to new client department
     - Delete patron's old client department
+    #### Delete old patron
+- Update patron to new value
+    #### Update invoice address
+    - Update patron's invoice address to new value
+    #### Update client
+    - Update patron's client to new value
+    #### Update Client Department
+    - Update patron's client department to new value
+### Department
+    #### Update department to new department
+    - Create new department
+    - Update department to new department
+    - Delete old department
+    #### Update department to new change value 
 ### Opportunity Items
 - Decompose opp_items into [items_create, items_update, items_delete]
 - Load persisted items => persisted_items, Partionate persisted_items into => persisted_items_to_master_items, persisted_items_to_no_master_items
@@ -57,7 +71,4 @@ opportunity
     - Delete items in which they don't have refrence from others(complex?)
 ### Opportunity 
 - Update opportunity
-    ### Department
-        - Create new department
-        - Update opportunity's department_id to new department
     ### Update general information: contract_start_date, contract_end_date, memo, total_price_with_tax
