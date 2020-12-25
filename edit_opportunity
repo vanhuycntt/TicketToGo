@@ -1,0 +1,60 @@
+## Storage
+opportunity
+    - patron 
+        => master patron
+        => invoice_addr => PIC => master PIC
+                        => Address => master Address
+                        => Email Address => master email address
+        => client => master client
+        => client_department => master client_department
+    - department => master department
+    - opportunity_items
+        - opp_item => item => master item
+## Input
+- Opportunity Items(opp_items)
+
+## What to do
+## Validation
+### Bussiness rules
+-  persisted_opp_items + created_opp_items - deleted_opp_items between 1 and 3000
+-  contract_start_date < contract_end_date 
+
+## Logic Process
+### Patron
+- Update patron
+    #### Update master patron id
+    #### Update invoice address
+    - Create new invoice address
+    - Update patron's invoice address to new invoice address
+    - Delete  patron's old invoice address
+    #### Update client
+    - Create new client
+    - Update patron's client to new client
+    - Delete patron's old client
+    #### Update Client Department
+    - Create new client department
+    - Update patron's client department to new client department
+    - Delete patron's old client department
+### Opportunity Items
+- Decompose opp_items into [items_create, items_update, items_delete]
+- Load persisted items => persisted_items, Partionate persisted_items into => persisted_items_to_master_items, persisted_items_to_no_master_items
+    #### New Opportunity Items 
+    - Create new items
+    - Create new created_opp_items and refer to new items have just created.
+    #### Update Opportunity Items 
+    - Verify updated_opp_items existed
+    - Case 1: Update to new items
+        + create new items
+        + update updated_opp_items to refer to new items
+        + delete old items in which they don't have refrence from others(complex)
+    - Case 2: Update updated_opp_items on some informaton: quantity, price, payment_count
+    #### Delete Opportunity Items
+    - Verify deleted_opp_items existed
+    - Delete deleted_opp_items
+    - Delete items in which they don't have refrence from others(complex?)
+### Opportunity 
+- Update opportunity
+    ### Department
+        - Create new department
+        - Update opportunity's department_id to new department
+    ### Update general information: contract_start_date, contract_end_date, memo, total_price_with_tax
